@@ -1,6 +1,6 @@
 # json_stream
 
-A package for converting objects to JSON asynchronously to a byte stream.
+A package for converting objects to JSON asynchronously through a byte stream.
 
 This package is useful for encoding extremely large objects that would consume too much memory with a standard
 [JsonEncoder](https://api.dart.dev/dart-convert/JsonEncoder-class.html).
