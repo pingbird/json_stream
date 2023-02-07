@@ -197,7 +197,7 @@ class JsonStreamWriter {
   Future<void> writeKey(String key) async {
     final comma = _startKey();
     await _writeRawString('${comma ? ',' : ''}');
-    await _writeRawBuffer(encodeValue(key));
+    await _writeRawBuffer(_encodeValue(key));
     await _writeRawString(':');
   }
 
@@ -206,7 +206,7 @@ class JsonStreamWriter {
   Future<void> writeKeyStream(Stream<String> stream) async {
     final comma = _startKey();
     await _writeRawString('${comma ? ',' : ''}"');
-    await _writeRawStream(stream.map(encodeStringContents));
+    await _writeRawStream(stream.map(_encodeStringContents));
     await _writeRawString('":');
   }
 
@@ -214,7 +214,7 @@ class JsonStreamWriter {
   Future<void> writeStringStream(Stream<String> stream) async {
     final comma = _startValue();
     await _writeRawString('${comma ? ',' : ''}"');
-    await _writeRawStream(stream.map(encodeStringContents));
+    await _writeRawStream(stream.map(_encodeStringContents));
     await _writeRawString('"');
     await _endValue();
   }
@@ -253,7 +253,7 @@ class JsonStreamWriter {
         true == value ||
         false == value ||
         null == value) {
-      await writeRawBuffer(encodeValue(value));
+      await writeRawBuffer(_encodeValue(value));
     } else if (value is List) {
       await startList();
       for (final element in value) {
@@ -329,26 +329,23 @@ class JsonStreamWriter {
   }
 
   /// Converts a single value to a json stream.
-  static Stream<List<int>> convert(Object? value) {
+  static Stream<List<int>> encode(Object? value) {
     final writer = JsonStreamWriter();
     writer.write(value).then((_) => writer.close());
     return writer.stream;
   }
 
-  /// Encodes and escapes the contents of a string so that it can be written to
-  /// a json stream.
-  static Uint8List encodeStringContents(String value) {
+  static Uint8List _encodeStringContents(String value) {
     // We can piggyback off the existing implementation with minimal overhead,
     // just encode the string and slice away the quotes.
-    final encoded = encodeValue(value);
+    final encoded = _encodeValue(value);
     return encoded.buffer.asUint8List(
       encoded.offsetInBytes + 1,
       encoded.lengthInBytes - 2,
     );
   }
 
-  /// Converts a value to JSON.
-  static Uint8List encodeValue(Object? value) {
+  static Uint8List _encodeValue(Object? value) {
     // JsonUtf8Encoder minimizes copying by doing both string escape and UTF-8
     // encoding at the same time.
     final encoded = JsonUtf8Encoder().convert(value);
