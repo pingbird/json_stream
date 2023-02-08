@@ -5,7 +5,7 @@ import 'package:json_stream/writer.dart';
 
 Future<void> main() async {
   await stdout.addStream(
-    JsonStreamWriter.encode({
+    JsonStreamWriter.convert({
       'numbers': Stream.periodic(
         const Duration(milliseconds: 100),
         (i) => '$i',

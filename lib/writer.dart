@@ -13,6 +13,9 @@ class _ContainerState {
 /// Encodes JSON values to a stream asynchronously, this is useful for encoding
 /// extremely large objects that would consume too much memory with a standard
 /// [JsonEncoder].
+///
+/// Users of this class should listen to [stream] before writing any values,
+/// this stream closes when the top-level json object is finished.
 class JsonStreamWriter {
   // Completer for when the stream is paused, such as when the stream is piped
   // to a socket and its buffer is full. We want to avoid buffering the entire
@@ -329,7 +332,7 @@ class JsonStreamWriter {
   }
 
   /// Converts a single value to a json stream.
-  static Stream<List<int>> encode(Object? value) {
+  static Stream<List<int>> convert(Object? value) {
     final writer = JsonStreamWriter();
     writer.write(value).then((_) => writer.close());
     return writer.stream;

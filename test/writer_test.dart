@@ -9,7 +9,7 @@ void main() {
     Object? value,
     String expected,
   ) async {
-    expect(await utf8.decodeStream(JsonStreamWriter.encode(value)), expected);
+    expect(await utf8.decodeStream(JsonStreamWriter.convert(value)), expected);
   }
 
   test('Top-level string', () => expectConvert('hello', '"hello"'));

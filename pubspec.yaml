@@ -1,6 +1,6 @@
 name: json_stream
 description: A package for converting objects to JSON asynchronously through a byte stream.
-version: 1.0.0
+version: 1.0.0+1
 repository: https://github.com/PixelToast/json_stream
 
 environment:
